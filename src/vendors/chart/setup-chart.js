@@ -8,7 +8,7 @@ function factoryChartSettings(data) {
                     backgroundColor: data.map(x => x.backgroundColor)
                 }
             ],
-            labels: data.map(x => x.label)
+            labels: data.map(x => `${x.label} - ${countPercent(x.value)}%`)
         },
         options: {
             responsive: true
@@ -21,6 +21,18 @@ window.addEventListener('data-table:update', (data) => {
     createChart(settings);
 });
 
+function sumValues() {
+    let sum = 0;
+    for (const chart of CHART_DATA) {
+        sum += chart.value;
+    }
+    return sum;
+}
+
+function countPercent (value) {
+    return (value / sumValues() * 100).toFixed(1);
+}
+
 function createChart(settings) {
     const $root = document.querySelector('#chart-area');
     const ctx = $root.getContext('2d');
@@ -28,6 +40,7 @@ function createChart(settings) {
 }
 
 function setup() {
+    countPercentages()
     const settings = factoryChartSettings(CHART_DATA);
     return createChart(settings);
 }
