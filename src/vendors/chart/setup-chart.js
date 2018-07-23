@@ -4,11 +4,11 @@ function factoryChartSettings(data) {
         data: {
             datasets: [
                 {
-                    data: data.map(x => x.value),
+                    data: mapValues(data),
                     backgroundColor: data.map(x => x.backgroundColor)
                 }
             ],
-            labels: data.map(x => `${x.label} - ${countPercent(x.value)}%`)
+            labels: setupLabels(data)
         },
         options: {
             responsive: true
@@ -21,12 +21,22 @@ window.addEventListener('data-table:update', (data) => {
     createChart(settings);
 });
 
-function sumValues() {
-    return CHART_DATA.reduce((sum, nextElement) => sum += nextElement.value, 0)
+function sumValues(arrayOfValues) {
+    return arrayOfValues.reduce((mem, item) => mem += item, 0);
 }
 
-function countPercent(value) {
-    return (value / sumValues() * 100).toFixed(1);
+function mapValues(data) {
+    return data.map((item) => item.value);
+}
+
+function setupLabels(data) {
+    const arrayOfValues = mapValues(data);
+    const mem = sumValues(arrayOfValues);
+    return data.map((x) => `${x.label} - ${countPercent(x.value, mem)}%`);
+}
+
+function countPercent(value, totalValue) {
+    return (value / totalValue * 100).toFixed(1);
 }
 
 function createChart(settings) {
