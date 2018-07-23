@@ -22,14 +22,10 @@ window.addEventListener('data-table:update', (data) => {
 });
 
 function sumValues() {
-    let sum = 0;
-    for (const chart of CHART_DATA) {
-        sum += chart.value;
-    }
-    return sum;
+    return CHART_DATA.reduce((sum, nextElement) => sum += nextElement.value, 0)
 }
 
-function countPercent (value) {
+function countPercent(value) {
     return (value / sumValues() * 100).toFixed(1);
 }
 
