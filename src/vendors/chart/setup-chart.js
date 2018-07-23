@@ -40,7 +40,6 @@ function createChart(settings) {
 }
 
 function setup() {
-    countPercentages()
     const settings = factoryChartSettings(CHART_DATA);
     return createChart(settings);
 }
