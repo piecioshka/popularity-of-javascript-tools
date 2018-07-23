@@ -10,7 +10,7 @@
 
 * Vue.js - 108 346
 * React.js - 107 014
-* Angular - 38720
+* Angular - 38 720
 * Backbone.js - 27 229
 * Aurelia - 10 577
 
