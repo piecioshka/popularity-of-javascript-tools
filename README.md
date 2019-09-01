@@ -1,6 +1,6 @@
 # Popularity of JavaScript frameworks
 
-> Updated: 2018-07-23
+> Updated: 2019-09-01
 
 ## Open a report :bookmark:
 
@@ -8,11 +8,13 @@
 
 ## Popularity with GitHub stars :star2:
 
-* Vue.js - 108 346
-* React.js - 107 014
-* Angular - 38 720
-* Backbone.js - 27 229
-* Aurelia - 10 577
+* [Vue.js](https://github.com/vuejs/vue) - 147 229
+* [React.js](https://github.com/facebook/react) - 135 316
+* [Angular](https://github.com/angular/angular) - 50 896
+* [Backbone.js](https://github.com/jashkenas/backbone) - 27 528
+* [Aurelia](https://github.com/aurelia/framework) - 11 114
+* [Svelte](https://github.com/sveltejs/svelte) - 22 890
+* [HyperApp](https://github.com/jorgebucaran/hyperapp) - 16 894
 
 ## License
 

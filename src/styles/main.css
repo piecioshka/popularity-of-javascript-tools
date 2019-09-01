@@ -1,5 +1,6 @@
 body {
     text-align: center;
+    font-family: 'Lato', sans-serif;
 }
 
 #chooser {
@@ -15,4 +16,8 @@ body {
     margin: 30px 0 0 0;
     border-top: 1px solid #324d5c;
     padding: 30px 0 0 0;
+}
+
+h1 em {
+    color: #999;
 }
