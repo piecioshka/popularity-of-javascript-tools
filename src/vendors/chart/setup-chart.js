@@ -8,7 +8,7 @@ function factoryChartSettings(data) {
                     backgroundColor: pick(data, 'backgroundColor')
                 }
             ],
-            labels: setupLabels(data)
+            labels: buildLabels(data)
         },
         options: {
             responsive: true
@@ -29,14 +29,14 @@ function pick(data, property) {
     return data.map((item) => item[property]);
 }
 
-function setupLabels(data) {
+function toPercent(value, total) {
+    return (value / total * 100).toFixed(1);
+}
+
+function buildLabels(data) {
     const values = pick(data, 'value');
     const mem = sum(values);
     return data.map((x) => `${x.label} - ${toPercent(x.value, mem)}%`);
-}
-
-function toPercent(value, total) {
-    return (value / total * 100).toFixed(1);
 }
 
 function createChart(settings) {
