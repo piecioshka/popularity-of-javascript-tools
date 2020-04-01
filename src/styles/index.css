@@ -86,3 +86,16 @@ a {
     color: inherit;
     text-decoration: none;
 }
+
+
+@media only screen and (max-width: 1200px) {
+    html {
+        font-size: 46.875%;
+    }
+}
+
+@media only screen and (max-width: 750px) {
+    html {
+        font-size: 31.25%;
+    }
+}
