@@ -1,4 +1,5 @@
 const APIurl = 'https://api.github.com/repos/';
+const tableWrapper = document.querySelector('.table-wrapper');
 
 const fetchData = async (repo) => {
     try {
@@ -16,21 +17,14 @@ const getData = (repo) => {
     fetchData(repo).then(data => {
         const starsCount = data.stargazers_count;
         const forksCount = data.forks_count;
-        let i = 0;
 
         frameworks.forEach(framework => {
-            framework.repo === repo ? framework.stars = starsCount : null;
-            framework.repo === repo ? framework.forks = forksCount : null;
-
-            repoStarsList[i].textContent = framework.stars;
-            repoForksList[i].textContent = framework.forks;
-            i++;
+            framework.repo === repo ? framework.stars = `${starsCount} stars` : null;
+            framework.repo === repo ? framework.forks = `${forksCount} forks` : null;
         })
+        setup();
     })
 }
-
-const repoStarsList = [...document.querySelectorAll('.repo-stars')];
-const repoForksList = [...document.querySelectorAll('.repo-forks')];
 
 const frameworks = [
     { name: 'Vue', repo: 'vuejs/vue', stars: 0, forks: 0 },
@@ -40,6 +34,13 @@ const frameworks = [
     { name: 'Backbone', repo: 'jashkenas/backbone', stars: 0, forks: 0 },
     { name: 'Ember', repo: 'emberjs/ember.js', stars: 0, forks: 0 }
 ]
+
+function setup() {
+    const d = new SimpleDataTable(tableWrapper , {addButtonLabel: 'New record'});
+
+    d.load(frameworks);
+    d.render();
+}
 
 const init = () => {
     frameworks.forEach(framework => getData(framework.repo));
