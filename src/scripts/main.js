@@ -1,11 +1,11 @@
 const githubUrl = "https://api.github.com/repos/";
 const frameworks = {
-    vue: { name: "Vue", repo: "vuejs/vue" },
-    react: { name: "React", repo: "facebook/react" },
-    angular: { name: "Angular", repo: "angular/angular" },
-    svelte: { name: "Svelte", repo: "sveltejs/svelte" },
-    backbone: { name: "Backbone", repo: "jashkenas/backbone" },
-    "ember.js": { name: "Ember", repo: "emberjs/ember.js" },
+    vue: { name: "Vue", repo: "vuejs/vue", stars: 0, forks: 0 },
+    react: { name: "React", repo: "facebook/react", stars: 0, forks: 0 },
+    angular: { name: "Angular", repo: "angular/angular", stars: 0, forks: 0 },
+    svelte: { name: "Svelte", repo: "sveltejs/svelte", stars: 0, forks: 0 },
+    backbone: { name: "Backbone", repo: "jashkenas/backbone", stars: 0, forks: 0 },
+    "ember.js": { name: "Ember", repo: "emberjs/ember.js", stars: 0, forks: 0 },
 };
 
 async function fetchRepositoryDetails(repo) {
@@ -34,8 +34,9 @@ function displayTable() {
     const tableOptions = { readonly: true };
     // @ts-ignore
     const table = new SimpleDataTable($target, tableOptions);
-    table.setHeaders(["Name", "Repository", "Stars", "Forks"]);
+    table.setHeaders(["Name 🗒️", "Repository 📦", "Stars ⭐️", "Forks 🪚"]);
     table.load(Object.values(frameworks));
+    table.sortByColumn(2, (a, b) => b - a);
     table.render();
 }
 
