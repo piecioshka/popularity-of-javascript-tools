@@ -1,23 +1,48 @@
-body {
+/* Basic setup */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+}
+
+/* Header and text*/
+
+header {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
     text-align: center;
-    font-family: 'Lato', sans-serif;
 }
 
-#chooser {
-    width: 450px;
-    margin: 0 auto;
+h1 {
+    justify-self: flex-start;
+    font-size: 3.8rem;
+    margin-bottom: 0.6rem;
 }
 
-#chooser > table {
-    margin: 0 auto;
+p {
+    font-size: 2.6rem;
+    font-weight: 300;
 }
 
-#canvas-holder {
-    margin: 30px 0 0 0;
-    border-top: 1px solid #324d5c;
-    padding: 30px 0 0 0;
+@media only screen and (max-width: 1200px) {
+    html {
+        font-size: 46.875%;
+    }
 }
 
-h1 em {
-    color: #999;
+@media only screen and (max-width: 750px) {
+    html {
+        font-size: 31.25%;
+    }
 }
