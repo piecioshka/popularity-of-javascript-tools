@@ -1,49 +1,47 @@
-const APIurl = 'https://api.github.com/repos/';
-const tableWrapper = document.querySelector('.table-wrapper');
+const githubUrl = "https://api.github.com/repos/";
+const frameworks = {
+    vue: { name: "Vue", repo: "vuejs/vue" },
+    react: { name: "React", repo: "facebook/react" },
+    angular: { name: "Angular", repo: "angular/angular" },
+    svelte: { name: "Svelte", repo: "sveltejs/svelte" },
+    backbone: { name: "Backbone", repo: "jashkenas/backbone" },
+    "ember.js": { name: "Ember", repo: "emberjs/ember.js" },
+};
 
-const fetchData = async (repo) => {
-    try {
-        const response = await fetch(`${APIurl}${repo}`);
-        const data = await response.json();
-
-        return data;
-
-    } catch (err) {
-        console.log(err);
-    }
+async function fetchRepositoryDetails(repo) {
+    const url = `${githubUrl}${repo}`;
+    const response = await fetch(url);
+    return await response.json();
 }
 
-const getData = (repo) => {
-    fetchData(repo).then(data => {
-        const starsCount = data.stargazers_count;
-        const forksCount = data.forks_count;
+async function fetchStarsAndForks() {
+    const repositories = await Promise.allSettled(
+        Object.values(frameworks).map((framework) =>
+            fetchRepositoryDetails(framework.repo)
+        )
+    );
 
-        frameworks.forEach(framework => {
-            framework.repo === repo ? framework.stars = `${starsCount} stars` : null;
-            framework.repo === repo ? framework.forks = `${forksCount} forks` : null;
-        })
-        setup();
-    })
+    repositories.forEach(({ status, value }) => {
+        if (status === "fulfilled" && value.name) {
+            frameworks[value.name].stars = value.stargazers_count;
+            frameworks[value.name].forks = value.forks_count;
+        }
+    });
 }
 
-const frameworks = [
-    { name: 'Vue', repo: 'vuejs/vue', stars: 0, forks: 0 },
-    { name: 'React', repo: 'facebook/react', stars: 0, forks: 0 },
-    { name: 'Angular', repo: 'angular/angular', stars: 0, forks: 0 },
-    { name: 'Svelte', repo: 'sveltejs/svelte', stars: 0, forks: 0 },
-    { name: 'Backbone', repo: 'jashkenas/backbone', stars: 0, forks: 0 },
-    { name: 'Ember', repo: 'emberjs/ember.js', stars: 0, forks: 0 }
-]
-
-function setup() {
-    const d = new SimpleDataTable(tableWrapper , {addButtonLabel: 'New record'});
-
-    d.load(frameworks);
-    d.render();
+function displayTable() {
+    const $target = document.querySelector(".table-wrapper");
+    const tableOptions = { readonly: true };
+    // @ts-ignore
+    const table = new SimpleDataTable($target, tableOptions);
+    table.setHeaders(["Name", "Repository", "Stars", "Forks"]);
+    table.load(Object.values(frameworks));
+    table.render();
 }
 
-const init = () => {
-    frameworks.forEach(framework => getData(framework.repo));
+async function main() {
+    await fetchStarsAndForks();
+    displayTable();
 }
 
-window.addEventListener('DOMContentLoaded', init);
+window.addEventListener("DOMContentLoaded", main);

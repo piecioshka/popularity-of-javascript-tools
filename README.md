@@ -8,4 +8,4 @@ The most popular JavaScript frameworks, based on stats from GitHub (repo stars a
 
 ## License
 
-[The MIT License](http://piecioshka.mit-license.org) @ 2020
+[The MIT License](http://piecioshka.mit-license.org) @ 2023

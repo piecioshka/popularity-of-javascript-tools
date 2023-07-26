@@ -15,7 +15,7 @@ html {
 
 /* Header and text*/
 
-header{
+header {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -27,9 +27,7 @@ header{
 h1 {
     justify-self: flex-start;
     font-size: 3.8rem;
-    text-transform: uppercase;
-    font-family: sans-serif;
-    margin-bottom: .6rem;
+    margin-bottom: 0.6rem;
 }
 
 p {

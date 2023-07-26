@@ -2,23 +2,32 @@ class SimpleDataTable {
     constructor($el, options = {}) {
         this.$el = $el;
         this.addButtonLabel = options.addButtonLabel || '✚';
+        this.readonly = options.readonly || false;
         this.defaultColumnPrefix = options.defaultColumnPrefix || 'column';
-        this.defaultColumnNumber = options.defaultColumnNumber || 3;
+        this.defaultColumnNumber = options.defaultColumnNumber || null;
         this.defaultHighlightedCellClass = options.defaultHighlightedCellClass || 'highlighted-cell';
+        this.headers = [];
         this.data = [];
         this._events = {};
     }
 
-    render() {
-        if (!this.$el) {
-            throw new Error('this.$el is not defined');
-        }
+    _renderTHead($table) {
+        const $thead = document.createElement('thead');
+        const $row = document.createElement('tr');
 
-        this.$el.innerHTML = '';
+        this.headers.forEach((name, index) => {
+            const $cell = this._createEmptyHeaderCell();
+            $cell.textContent = name;
+            $cell.addEventListener('click', () => this.sortByColumn(index));
+            $row.appendChild($cell);
+        });
 
-        const $table = document.createElement('table');
+        $thead.appendChild($row);
+        $table.appendChild($thead);
+    }
+
+    _renderTBody($table) {
         const $tbody = document.createElement('tbody');
-        $table.appendChild($tbody);
 
         this.data.forEach((item, rowIndex) => {
             const $row = document.createElement('tr');
@@ -28,16 +37,43 @@ class SimpleDataTable {
                 $row.appendChild($cell);
             });
 
-            this._addCellWithRemoveButton($row);
+            const $cell = this.readonly
+                ? this._createEmptyCell()
+                : this._createCellWithRemoveRowButton();
+            $row.appendChild($cell);
 
             $tbody.appendChild($row);
         });
 
-        this.$el.appendChild($table);
+        $table.appendChild($tbody);
+    }
 
-        const $addButton = this._createAddButton();
+    render() {
+        if (!this.$el) {
+            throw new Error('this.$el is not defined');
+        }
 
-        this.$el.appendChild($addButton);
+        SimpleDataTable.clearElement(this.$el);
+
+        const $wrapper = document.createElement('div');
+        $wrapper.classList.add('simple-data-table');
+        const $table = document.createElement('table');
+
+        if (this.headers.length > 0) {
+            this._renderTHead($table);
+        }
+
+        this._renderTBody($table);
+
+        $wrapper.appendChild($table);
+
+        if (!this.readonly) {
+            const $addButton = this._createAddButton();
+            $wrapper.appendChild($addButton);
+        }
+
+        this.$el.appendChild($wrapper);
+
         return this;
     }
 
@@ -62,7 +98,7 @@ class SimpleDataTable {
                     if (cellContent === item) {
                         indexes.push({
                             rowIndex,
-                            cellIndex
+                            cellIndex,
                         });
                     }
                 });
@@ -107,8 +143,16 @@ class SimpleDataTable {
         $input.value = content;
     }
 
+    _createEmptyCell() {
+        return document.createElement('td');
+    }
+
+    _createEmptyHeaderCell() {
+        return document.createElement('th');
+    }
+
     _createCellWithRemoveRowButton() {
-        const $cell = document.createElement('td');
+        const $cell = this._createEmptyCell();
         const $removeButton = document.createElement('button');
         $removeButton.classList.add('remove-row');
         $removeButton.textContent = '✖︎';
@@ -142,10 +186,14 @@ class SimpleDataTable {
         $input.value = value;
         $input.name = name;
 
+        if (this.readonly) {
+            $input.disabled = true;
+        }
+
         $input.addEventListener('change', () => {
             this.data[rowIndex][name] = $input.value;
             this.emit(SimpleDataTable.EVENTS.UPDATE, this.data);
-        }, this);
+        });
 
         $cell.appendChild($input);
         return $cell;
@@ -167,7 +215,7 @@ class SimpleDataTable {
 
         this.data.push(record);
 
-        this._addCellWithRemoveButton($row);
+        $row.appendChild(this._createCellWithRemoveRowButton());
         $tbody.appendChild($row);
 
         this.emit(SimpleDataTable.EVENTS.ROW_ADDED);
@@ -178,20 +226,29 @@ class SimpleDataTable {
         const $firstRecord = $tbody.querySelector('tr');
 
         if (!$firstRecord) {
-            return Array(this.defaultColumnNumber)
+            const size = this.defaultColumnNumber
+                ? this.defaultColumnNumber
+                : this.headers
+                    ? this.headers.length
+                    : this.data[0] && this.data[0].length;
+            if (!size) {
+                return [];
+            }
+            return Array(size)
                 .fill(this.defaultColumnPrefix)
-                .map((name, index) => `${name}-${index + 1}`);
+                .map((name, index) => `${name}${index + 1}`);
         }
 
         const $elements = Array.from($firstRecord.children);
-        return $elements.map(($cell) => $cell.querySelector('input'))
+        return $elements
+            .map(($cell) => $cell.querySelector('input'))
             .filter(($element) => $element)
             .map(($input) => $input.name);
     }
 
-    _addCellWithRemoveButton($row) {
-        const $cellWithButton = this._createCellWithRemoveRowButton();
-        $row.appendChild($cellWithButton);
+    setHeaders(items) {
+        this.headers = items;
+        return this;
     }
 
     load(data) {
@@ -221,22 +278,29 @@ class SimpleDataTable {
         cellIndex = 0,
         comparingFunction = (a, b) => a.toString().localeCompare(b.toString())
     ) {
-        this.data.sort((firstRow, secondRow) => comparingFunction(
-            Object.values(firstRow)[cellIndex],
-            Object.values(secondRow)[cellIndex])
+        this.data.sort((firstRow, secondRow) =>
+            comparingFunction(
+                Object.values(firstRow)[cellIndex],
+                Object.values(secondRow)[cellIndex]
+            )
         );
+        this.render();
         this.emit(SimpleDataTable.EVENTS.DATA_SORTED);
     }
 
-    static get EVENTS() {
-        return {
-            UPDATE: 'SimpleDataTable.EVENTS.UPDATE',
-            ROW_ADDED: 'SimpleDataTable.EVENTS.ROW_ADDED',
-            ROW_REMOVED: 'SimpleDataTable.EVENTS.ROW_REMOVED',
-            DATA_SORTED: 'SimpleDataTable.EVENTS.DATA_SORTED'
-        };
+    static clearElement($element) {
+        while ($element.firstElementChild) {
+            $element.firstElementChild.remove();
+        }
     }
 }
+
+SimpleDataTable.EVENTS = {
+    UPDATE: 'SimpleDataTable.EVENTS.UPDATE',
+    ROW_ADDED: 'SimpleDataTable.EVENTS.ROW_ADDED',
+    ROW_REMOVED: 'SimpleDataTable.EVENTS.ROW_REMOVED',
+    DATA_SORTED: 'SimpleDataTable.EVENTS.DATA_SORTED',
+};
 
 // Exports
 if (typeof module === 'object' && module.exports) {
