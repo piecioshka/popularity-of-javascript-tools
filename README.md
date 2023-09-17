@@ -1,10 +1,10 @@
-# Popularity of JavaScript frameworks
+# Popularity of JavaScript tools
 
-The most popular JavaScript frameworks, based on GitHub stats (repo stars and forks)
+The most popular JavaScript tools, based on GitHub stats (repo stars and forks)
 
 ## Preview 🎉
 
-<https://piecioshka.github.io/popularity-of-javascript-frameworks/>
+<https://piecioshka.github.io/popularity-of-javascript-tools/>
 
 ## License
 

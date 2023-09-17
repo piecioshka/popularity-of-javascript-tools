@@ -3,20 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Popularity of JavaScript frameworks</title>
-    <link rel="stylesheet" href="vendors/simple-data-table/src/skins/default.css">
-    <link rel="stylesheet" href="src/styles/main.css">
+    <title>Popularity of JavaScript tools</title>
 
-    <script src="vendors/simple-data-table/src/index.js"></script>
+    <link rel="stylesheet" href="src/styles/main.css">
+    <link rel="stylesheet" href="src/styles/simple-data-table-skin.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/simple-data-table@latest/src/index.js" defer></script>
+    <script src="src/scripts/main.js" defer></script>
 </head>
 <body>
     <div id="app">
         <header>
-            <h1>Popularity of JavaScript frameworks</h1>
+            <h1>Popularity of JavaScript tools</h1>
             <p>(Based on GitHub stats)</p>
+            <p><em>TIP: you can sort the table by clicking the column name (sorted by <strong>Stars</strong> by default)</em></p>
         </header>
-        <main class="table-wrapper"></main>
+
+        <main>
+            <section class="tool-stats">
+                <h2>Frameworks</h2>
+                <div class="table-wrapper-for-frameworks"></div>
+            </section>
+
+            <section class="tool-stats">
+                <h2>Static Site Generators</h2>
+                <div class="table-wrapper-for-static-site-generators"></div>
+            </section>
+        </main>
     </div>
-    <script src="src/scripts/main.js"></script>
 </body>
 </html>
