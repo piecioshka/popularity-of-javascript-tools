@@ -27,6 +27,7 @@ const staticSite = {
     gatsby: { name: "Gatsby", repo: "gatsbyjs/gatsby", stars: 0, forks: 0 },
     "next.js": { name: "Next.js", repo: "vercel/next.js", stars: 0, forks: 0 },
     jekyll: { name: "Jekyll", repo: "jekyll/jekyll", stars: 0, forks: 0 },
+    hugo: { name: "Hugo", repo: "gohugoio/hugo", stars: 0, forks: 0 },
     eleventy: { name: "Eleventy", repo: "11ty/eleventy", stars: 0, forks: 0 },
     hexo: { name: "Hexo", repo: "hexojs/hexo", stars: 0, forks: 0 },
     vuepress: { name: "VuePress", repo: "vuejs/vuepress", stars: 0, forks: 0 },
