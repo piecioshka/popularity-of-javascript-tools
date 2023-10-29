@@ -67,8 +67,8 @@ function displayTable(tools, targetSelector) {
     const table = new SimpleDataTable($target, tableOptions);
     table.setHeaders(columnNames);
     table.load(Object.values(tools));
-    table.sortByColumn(2, (a, b) => b - a);
     table.render();
+    table.sortByColumn(2);
 }
 
 async function displayTools(tools, toolsSelector) {
