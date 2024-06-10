@@ -69,6 +69,12 @@ function displayTable(tools, targetSelector) {
     table.setHeaders(columnNames);
     table.load(Object.values(tools));
     table.render();
+    table.setSortComparingFn((a, b) => {
+        if (typeof a === "string") {
+            return a.localeCompare(b);
+        }
+        return a - b;
+    });
     table.sortByColumn(2);
 }
 
