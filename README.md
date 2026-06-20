@@ -8,4 +8,4 @@ The most popular JavaScript tools, based on GitHub stats (repo stars and forks)
 
 ## License
 
-[The MIT License](http://piecioshka.mit-license.org) @ 2023
+[The MIT License](http://piecioshka.mit-license.org) @ 2026
