@@ -6,7 +6,7 @@ const columnNames = ["Name 🗒️", "Repository 📦", "Stars ⭐️", "Forks �
 const frameworks = {
     // ___: { name: "___", repo: "___", stars: 0, forks: 0 },
     vue: { name: "Vue", repo: "vuejs/vue", stars: 0, forks: 0 },
-    react: { name: "React", repo: "facebook/react", stars: 0, forks: 0 },
+    react: { name: "React", repo: "react/react", stars: 0, forks: 0 },
     preact: { name: "Preact", repo: "preactjs/preact", stars: 0, forks: 0 },
     angular: { name: "Angular", repo: "angular/angular", stars: 0, forks: 0 },
     svelte: { name: "Svelte", repo: "sveltejs/svelte", stars: 0, forks: 0 },
@@ -28,7 +28,7 @@ const staticSite = {
     "next.js": { name: "Next.js", repo: "vercel/next.js", stars: 0, forks: 0 },
     jekyll: { name: "Jekyll", repo: "jekyll/jekyll", stars: 0, forks: 0 },
     hugo: { name: "Hugo", repo: "gohugoio/hugo", stars: 0, forks: 0 },
-    eleventy: { name: "Eleventy", repo: "11ty/eleventy", stars: 0, forks: 0 },
+    eleventy: { name: "Eleventy", repo: "11ty/buildawesome", stars: 0, forks: 0 },
     hexo: { name: "Hexo", repo: "hexojs/hexo", stars: 0, forks: 0 },
     vuepress: { name: "VuePress", repo: "vuejs/vuepress", stars: 0, forks: 0 },
     gridsome: { name: "Gridsome", repo: "gridsome/gridsome", stars: 0, forks: 0 },
@@ -47,16 +47,17 @@ async function fetchRepositoryDetails(repo) {
 }
 
 async function fetchStarsAndForks(tools) {
+    const entries = Object.values(tools);
     const repositories = await Promise.allSettled(
-        Object.values(tools).map((framework) =>
-            fetchRepositoryDetails(framework.repo)
-        )
+        entries.map((tool) => fetchRepositoryDetails(tool.repo))
     );
 
-    repositories.forEach(({ status, value }) => {
-        if (status === "fulfilled" && value.name) {
-            tools[value.name].stars = value.stargazers_count;
-            tools[value.name].forks = value.forks_count;
+    // Match results by index, not by the repository name returned by GitHub:
+    // renamed repositories are redirected and come back under a new name.
+    repositories.forEach(({ status, value }, index) => {
+        if (status === "fulfilled" && typeof value.stargazers_count === "number") {
+            entries[index].stars = value.stargazers_count;
+            entries[index].forks = value.forks_count;
         }
     });
 }
